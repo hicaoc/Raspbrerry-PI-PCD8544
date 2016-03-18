@@ -62,8 +62,17 @@ int _dc = 2;
 int _rst = 4;
 int _cs = 3;
 
+//sound parm
 
-  
+        struct sp
+        {
+        char *name;
+        char *parm;
+        } s[6];
+char  soundparm[150];
+char r[] = "0";
+char f[] = "Music Stop";
+
 // lcd contrast 
 int contrast = 65;
 
@@ -91,6 +100,60 @@ int fd;
   
 
 }
+//get sound card parm
+
+int getusbsoundparm()
+{
+    char ch;
+    int i ;
+    FILE* fstream;
+
+        struct test2
+        {
+        char *value;
+        } t[6];
+
+    fstream=fopen("/proc/asound/card1/pcm0p/sub0/hw_params","rb");
+    if(fstream==NULL)
+    {
+        printf("open file test.txt failed!\n");
+        exit(1);
+    }
+    
+    fread(&soundparm,sizeof(soundparm),1,fstream);
+
+    fclose(fstream);
+
+//	printf("size:%d &&&&&%s,size:",sizeof(soundparm),soundparm);
+   if (strcmp(soundparm, "closed\n") == 0) 
+	{
+//	printf("*****%s\n",soundparm);
+	s[1].parm=f;
+	s[4].parm=r;
+	return 0 ;
+	}
+      
+    char *delim = "\n";
+    char *p;
+    int x=1;
+    t[0].value=strtok(soundparm, delim);
+    while((p = strtok(NULL, delim))){
+        t[x].value=p ;
+        x++ ;
+        }
+   int y=0 ;
+    while(y < 6 ){
+       s[y].name=strtok(t[y].value," ");
+       s[y].parm=strtok(NULL," ");
+ //      printf("----%s\n", t[y].value);
+        y++;
+}
+ // printf("format:%s rate:%s\n",s[1].parm,s[4].parm);
+ // printf("=====%s %s\n",s[1].name,s[4].name);
+
+return 0 ;
+}
+
 
 //get wifi or eth ip
 char* get_ip(char ifname[10]) {
@@ -151,7 +214,20 @@ int main (void)
 	  {
 		printf("sysinfo-Error\n");
 	  }
-	  
+	  //usb sound card parm 
+	  getusbsoundparm();
+
+	  float rate=atof(s[4].parm)/1000; 
+	  char sparm[32]="";
+	 int dec_pl, sign = 3;
+	  strcat(sparm,s[1].parm);
+	  strcat(sparm," ");
+	  strcat(sparm,fcvt(rate,0,&dec_pl,&sign));
+	  strcat(sparm,"K");
+	
+  //	printf("---format:%s rate:%s\n",s[1].parm,s[4].parm);
+ //   	printf("---format:%s \n",sparm);
+ 
 	  // uptime
 	  char uptimeInfo[15];
 	  unsigned long uptime = sys_info.uptime / 60;
@@ -174,7 +250,7 @@ int main (void)
 	  sprintf(wifiipInfo, "W%s", get_ip("wlan0"));
 	  
 	  // build screen
-	  LCDdrawstring(0, 0, "Raspberry Pi:");
+	  LCDdrawstring(0, 0, sparm);
 	  LCDdrawline(0, 10, 83, 10, BLACK);
 	//  LCDdrawstring(0, 12, uptimeInfo);
           LCDdrawstring(0, 12, ethipInfo);
