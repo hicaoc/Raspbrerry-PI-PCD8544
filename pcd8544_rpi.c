@@ -62,19 +62,9 @@ int _dc = 2;
 int _rst = 4;
 int _cs = 3;
 
-//sound parm
-
-        struct sp
-        {
-        char *name;
-        char *parm;
-        } s[6];
-char  soundparm[150];
-char r[] = "0";
-char f[] = "Music Stop";
-
-// lcd contrast 
 int contrast = 65;
+
+
 
 //get cpu temp
 double get_cputemp(){
@@ -100,15 +90,27 @@ int fd;
   
 
 }
+
 //get sound card parm
 
-int getusbsoundparm()
+char sparm[32]="";
+
+char* getusbsoundparm()
 {
     char ch;
     int i ;
     FILE* fstream;
+    char soundparm[150];
 
-        struct test2
+
+    char mrate[] = "0.0";
+    char mformat[] = "MusicStop";
+    struct sp
+        {
+        char *name;
+        char *parm;
+        } s[6];
+     struct spvalue
         {
         char *value;
         } t[6];
@@ -124,15 +126,12 @@ int getusbsoundparm()
 
     fclose(fstream);
 
-//	printf("size:%d &&&&&%s,size:",sizeof(soundparm),soundparm);
    if (strcmp(soundparm, "closed\n") == 0) 
 	{
-//	printf("*****%s\n",soundparm);
-	s[1].parm=f;
-	s[4].parm=r;
-	return 0 ;
+	s[1].parm=mformat;
+	s[4].parm=mrate;
 	}
-      
+ else {     
     char *delim = "\n";
     char *p;
     int x=1;
@@ -145,13 +144,21 @@ int getusbsoundparm()
     while(y < 6 ){
        s[y].name=strtok(t[y].value," ");
        s[y].parm=strtok(NULL," ");
- //      printf("----%s\n", t[y].value);
         y++;
-}
- // printf("format:%s rate:%s\n",s[1].parm,s[4].parm);
- // printf("=====%s %s\n",s[1].name,s[4].name);
+	}
+  }
 
-return 0 ;
+
+//	float rate=atof(s[4].parm)/1000;
+//	int dec_pl, sign = 3;
+//	printf("%s %s\n",s[1].parm,s[4].parm);
+	sprintf(sparm,"%s %s",s[1].parm,s[4].parm);
+/*	strcat(sparm,s[1].parm);
+	strcat(sparm," ");
+	strcat(sparm,fcvt(rate,0,&dec_pl,&sign));
+	strcat(sparm,"K");
+*/
+return sparm ;
 }
 
 
@@ -215,18 +222,8 @@ int main (void)
 		printf("sysinfo-Error\n");
 	  }
 	  //usb sound card parm 
-	  getusbsoundparm();
-
-	  float rate=atof(s[4].parm)/1000; 
-	  char sparm[32]="";
-	 int dec_pl, sign = 3;
-	  strcat(sparm,s[1].parm);
-	  strcat(sparm," ");
-	  strcat(sparm,fcvt(rate,0,&dec_pl,&sign));
-	  strcat(sparm,"K");
+	   getusbsoundparm();
 	
-  //	printf("---format:%s rate:%s\n",s[1].parm,s[4].parm);
- //   	printf("---format:%s \n",sparm);
  
 	  // uptime
 	  char uptimeInfo[15];
@@ -251,12 +248,12 @@ int main (void)
 	  
 	  // build screen
 	  LCDdrawstring(0, 0, sparm);
-	  LCDdrawline(0, 10, 83, 10, BLACK);
+	 // LCDdrawline(0, 10, 83, 10, BLACK);
 	//  LCDdrawstring(0, 12, uptimeInfo);
-          LCDdrawstring(0, 12, ethipInfo);
-          LCDdrawstring(0, 20, wifiipInfo);
-	  LCDdrawstring(0, 28, cpuInfo);
-	  LCDdrawstring(0, 36, ramInfo);
+          LCDdrawstring(0, 8, ethipInfo);
+          LCDdrawstring(0, 16, wifiipInfo);
+	  LCDdrawstring(0, 24, cpuInfo);
+	  LCDdrawstring(0, 32, ramInfo);
 	  
 	  LCDdisplay();
 	  
