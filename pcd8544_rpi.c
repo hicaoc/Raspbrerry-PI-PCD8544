@@ -93,18 +93,19 @@ int fd;
 
 //get sound card parm
 
-char sparm[32]="";
+char sparm1[32]="";
+char sparm2[32]="";
 
-char* getusbsoundparm()
+int getusbsoundparm()
 {
     char ch;
     int i ;
     FILE* fstream;
-    char soundparm[150];
+    char soundparm[150]="";
 
 
-    char mrate[] = "0.0";
-    char mformat[] = "MusicStop";
+    char mformat[30] = "MusicStop";
+    char mrate[30] = "0.0";
     struct sp
         {
         char *name;
@@ -118,20 +119,19 @@ char* getusbsoundparm()
     fstream=fopen("/proc/asound/card1/pcm0p/sub0/hw_params","rb");
     if(fstream==NULL)
     {
-        printf("open file test.txt failed!\n");
+        printf("open card1 sound file hw_params failed!\n");
         exit(1);
     }
     
     fread(&soundparm,sizeof(soundparm),1,fstream);
 
     fclose(fstream);
-
-   if (strcmp(soundparm, "closed\n") == 0) 
-	{
 	s[1].parm=mformat;
 	s[4].parm=mrate;
-	}
- else {     
+
+   if (strcmp(soundparm, "closed\n") != 0) 
+  {  
+   
     char *delim = "\n";
     char *p;
     int x=1;
@@ -151,14 +151,15 @@ char* getusbsoundparm()
 
 //	float rate=atof(s[4].parm)/1000;
 //	int dec_pl, sign = 3;
-//	printf("%s %s\n",s[1].parm,s[4].parm);
-	sprintf(sparm,"%s %s",s[1].parm,s[4].parm);
+//	printf("end:%s %s\n",s[1].parm,s[4].parm);
+	sprintf(sparm1,"F:%s",s[1].parm);
+	sprintf(sparm2,"R:%s",s[4].parm);
 /*	strcat(sparm,s[1].parm);
 	strcat(sparm," ");
 	strcat(sparm,fcvt(rate,0,&dec_pl,&sign));
 	strcat(sparm,"K");
 */
-return sparm ;
+return 0 ;
 }
 
 
@@ -184,6 +185,7 @@ char* get_ip(char ifname[10]) {
 int main (void)
 {
 
+ daemon(1,1);
 
 
   // print infos
@@ -247,13 +249,14 @@ int main (void)
 	  sprintf(wifiipInfo, "W%s", get_ip("wlan0"));
 	  
 	  // build screen
-	  LCDdrawstring(0, 0, sparm);
+	  LCDdrawstring(0, 0, sparm1);
+	  LCDdrawstring(0, 8, sparm2);
 	 // LCDdrawline(0, 10, 83, 10, BLACK);
 	//  LCDdrawstring(0, 12, uptimeInfo);
-          LCDdrawstring(0, 8, ethipInfo);
-          LCDdrawstring(0, 16, wifiipInfo);
-	  LCDdrawstring(0, 24, cpuInfo);
-	  LCDdrawstring(0, 32, ramInfo);
+          LCDdrawstring(0, 16, ethipInfo);
+          LCDdrawstring(0, 24, wifiipInfo);
+	  LCDdrawstring(0, 32, cpuInfo);
+	  LCDdrawstring(0, 40, ramInfo);
 	  
 	  LCDdisplay();
 	  
