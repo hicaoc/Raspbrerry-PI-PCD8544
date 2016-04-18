@@ -83,7 +83,6 @@ int fd;
     return -1;
   }
   
-//  printf("temp: %.2f\n", temp);
   close(fd);
   temp = atoi(buf) / 1000.0;
   return temp;
@@ -148,17 +147,9 @@ int getusbsoundparm()
 	}
   }
 
-
-//	float rate=atof(s[4].parm)/1000;
-//	int dec_pl, sign = 3;
-//	printf("end:%s %s\n",s[1].parm,s[4].parm);
 	sprintf(sparm1,"F:%s",s[1].parm);
 	sprintf(sparm2,"R:%s",s[4].parm);
-/*	strcat(sparm,s[1].parm);
-	strcat(sparm," ");
-	strcat(sparm,fcvt(rate,0,&dec_pl,&sign));
-	strcat(sparm,"K");
-*/
+
 return 0 ;
 }
 
@@ -178,7 +169,6 @@ char* get_ip(char ifname[10]) {
 
   close(fd);
 
-  //printf("%s\n", inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr));
   return  (char *) inet_ntoa(((struct sockaddr_in *)&ifr.ifr_addr)->sin_addr);
 }
   
@@ -226,7 +216,6 @@ int main (void)
 	  //usb sound card parm 
 	   getusbsoundparm();
 	
- 
 	  // uptime
 	  char uptimeInfo[15];
 	  unsigned long uptime = sys_info.uptime / 60;
