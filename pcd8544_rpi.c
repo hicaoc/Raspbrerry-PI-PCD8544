@@ -121,18 +121,15 @@ int getusbsoundparm()
          printf("open card1 sound file hw_params failed!\n");
          sprintf(sparm1,"%s","card1 fail");
          sprintf(sparm2,"R:%s","0.0");
-	return -1  ;
+	        return -1  ;
   }
-    
     fread(&soundparm,sizeof(soundparm),1,fstream);
 
     fclose(fstream);
-	s[1].parm=mformat;
-	s[4].parm=mrate;
+	  s[1].parm=mformat;
+	  s[4].parm=mrate;
 
-   if (strcmp(soundparm, "closed\n") != 0) 
-  {  
-   
+   if (strcmp(soundparm, "closed\n") != 0) {  
     char *delim = "\n";
     char *p;
     int x=1;
@@ -146,9 +143,9 @@ int getusbsoundparm()
        s[y].name=strtok(t[y].value," ");
        s[y].parm=strtok(NULL," ");
         y++;
-	}
+	       }
   }
-
+  
 	sprintf(sparm1,"F:%s",s[1].parm);
 	sprintf(sparm2,"R:%s",s[4].parm);
 
@@ -195,14 +192,10 @@ int main (void)
   LCDInit(_sclk, _din, _dc, _cs, _rst, contrast);
   LCDclear();
 
-
-  
-  // show logo
+   // show logo
   LCDshowLogo();
 
-
-  
-  delay(2000);
+   delay(2000);
   
   for (;;)
   {
@@ -242,10 +235,10 @@ int main (void)
 	  // build screen
 	  LCDdrawstring(0, 0, sparm1);
 	  LCDdrawstring(0, 8, sparm2);
-	 // LCDdrawline(0, 10, 83, 10, BLACK);
-	//  LCDdrawstring(0, 12, uptimeInfo);
-          LCDdrawstring(0, 16, ethipInfo);
-          LCDdrawstring(0, 24, wifiipInfo);
+	//LCDdrawline(0, 10, 83, 10, BLACK);
+	//LCDdrawstring(0, 12, uptimeInfo);
+    LCDdrawstring(0, 16, ethipInfo);
+    LCDdrawstring(0, 24, wifiipInfo);
 	  LCDdrawstring(0, 32, cpuInfo);
 	  LCDdrawstring(0, 40, ramInfo);
 	  
