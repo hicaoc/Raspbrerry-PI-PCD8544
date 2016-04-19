@@ -116,11 +116,10 @@ int getusbsoundparm()
         } t[6];
 
     fstream=fopen("/proc/asound/card1/pcm0p/sub0/hw_params","rb");
-    if(fstream==NULL)
-    {
-	      sparm1="card1 fail";
-        sparm2="R:0.0";
-	      return -1  ;
+    if(fstream==NULL){
+      sparm1="card1 fail";
+      sparm2="R: 0.0";
+      return -1  ;
     }
     
     fread(&soundparm,sizeof(soundparm),1,fstream);
