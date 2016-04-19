@@ -92,15 +92,15 @@ int fd;
 
 //get sound card parm
 
-char sparm1[32]="";
-char sparm2[32]="";
+char sparm1[32] = "";
+char sparm2[32] = "";
 
 int getusbsoundparm()
 {
     char ch;
     int i ;
     FILE* fstream;
-    char soundparm[150]="";
+    char soundparm[150] = "";
 
 
     char mformat[30] = "MusicStop";
@@ -118,9 +118,9 @@ int getusbsoundparm()
     fstream=fopen("/proc/asound/card1/pcm0p/sub0/hw_params","rb");
     if(fstream==NULL)
     {
-        printf("open card1 sound file hw_params failed!\n");
-	sprintf(sparm1,"F:%s","card1 fail");
-        sprintf(sparm2,"R:%s","0.0");
+         printf("open card1 sound file hw_params failed!\n");
+         sprintf(sparm1,"%s","card1 fail");
+         sprintf(sparm2,"R:%s","0.0");
 	return -1  ;
   }
     
