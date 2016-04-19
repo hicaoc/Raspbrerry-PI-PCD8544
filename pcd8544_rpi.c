@@ -119,8 +119,10 @@ int getusbsoundparm()
     if(fstream==NULL)
     {
         printf("open card1 sound file hw_params failed!\n");
-        exit(1);
-    }
+	sprintf(sparm1,"F:%s","card1 fail");
+        sprintf(sparm2,"R:%s","0.0");
+	return -1  ;
+  }
     
     fread(&soundparm,sizeof(soundparm),1,fstream);
 
